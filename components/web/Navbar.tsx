@@ -6,9 +6,9 @@ import { redirect } from "next/navigation"
 import { useState } from "react"
 
 
-const Navbar = (session: Boolean = false) => {
+const Navbar = () => {
 
-  const [isSession, setSession] = useState(session);
+  const [isSession, setSession] = useState(false);
   const handleLogout = async () => {
     await authClient.signOut();
     redirect('/');
