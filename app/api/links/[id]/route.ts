@@ -25,9 +25,8 @@ export async function DELETE(
         const authUserId = session.session.userId;
 
         // ✅ AWAIT the params
-        const { id: linkId } = await params;  // ← Must await params
+        const { id: linkId } = await params;  
 
-        // 🔍 Find link
         const link = await Link.findById(linkId);
 
         if (!link) {

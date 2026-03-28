@@ -28,7 +28,6 @@ const ProfileCard = ({ userData }) => {
         setData({ ...data, ...formData });
 
 
-
         const response = await axios.put('/api/user/profileUpdate', formData);
         console.log(response);
 

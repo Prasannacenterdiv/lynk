@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/User";
 import ProfileCard from "@/components/web/ProfileCard";
+import SubmitLink from "@/components/web/SubmitLink";
 
 export default async function Dashboard() {
     let userData = null;
@@ -50,7 +51,10 @@ export default async function Dashboard() {
             <div className="flex-1 border-r border-white/20 p-4">
                 <ProfileCard userData={userData} />
             </div>
-            <div className="flex-1 p-4">Links</div>
+            <div className="flex-1 p-4">
+                <h2>Hey! Here are all your links</h2>
+                <SubmitLink/>
+            </div>
         </div>
     );
 }
