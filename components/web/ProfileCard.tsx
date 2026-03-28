@@ -34,6 +34,14 @@ const ProfileCard = ({ userData }) => {
         setIsOpen(false);
     };
 
+    const handleCopy = async () => {
+        const url: string = process.env.NEXT_PUBLIC_APP_URL!;
+        console.log(url);
+
+        await navigator.clipboard.writeText(url + data.username);
+        alert("Copied to the Clipboard!");
+    }
+
     return (
         <>
             {/* CARD */}
@@ -68,6 +76,14 @@ const ProfileCard = ({ userData }) => {
                     >
                         Edit Profile
                     </button>
+                    <div className='flex flex-col items-center gap-2'>
+                        <h2 className='text-center mt-5 font-medium text-xl'>This is your public URL! 🎉</h2>
+                        <div
+                            onClick={() => { handleCopy() }}
+                            className='border px-4 py-2 rounded-4xl cursor-pointer bg-blue-700 border-black'
+                        >COPY Link</div>
+                    </div>
+
                 </div>
             </div>
 
