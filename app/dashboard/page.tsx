@@ -3,18 +3,20 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/User";
+import Navbar from "@/components/web/Navbar";
 
 export default async function Dashboard() {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
-
+    
     if (!session) {
         redirect("/login");
     }
-
+    
     await connectDB();
 
+    
     // 🔍 Check if user exists
     const existingUser = await User.findOne({
         authUserId: session.user.id,
