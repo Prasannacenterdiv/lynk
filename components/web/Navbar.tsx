@@ -15,7 +15,7 @@ const Navbar = (session: Boolean = false) => {
   }
   return (
 
-    <nav className="flex justify-between items-center px-5 py-2 min-w-full border-b border-b-gray-400">
+    <nav className="flex justify-between items-center px-5 py-2 min-w-full border-b border-b-gray-400 h-15">
       <div
         onClick={() => redirect('/')}
         className="text-xl font-bold cursor-pointer">
