@@ -1,16 +1,16 @@
 "use client";
-import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
+import { checkAuth } from "@/lib/checkAuth";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+
 
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const handleGoogleLogin = () => {
         // TODO: trigger Google OAuth
         console.log("Google login clicked");
@@ -19,7 +19,9 @@ export default function Login() {
         })
     };
 
-    const handleGithubLogin = async() => {
+
+
+    const handleGithubLogin = async () => {
         console.log("GitHub login clicked");
         authClient.signIn.social({
             provider: 'github'
