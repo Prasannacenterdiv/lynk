@@ -22,7 +22,7 @@ const LandingPage = () => {
           </h1>
         </div>
         <p className="text-lg text-white/40 max-w-xl mx-auto mb-10 leading-relaxed">
-          Drop all your social links — we hand you one clean URL. Share it anywhere, update it anytime.
+          Drop all your social links & we hand you one clean URL. Share it anywhere, update it anytime.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <GetStarted/>
