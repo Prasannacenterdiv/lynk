@@ -1,17 +1,30 @@
+
+
 import { User } from "@/models/User";
 import { Link } from "@/models/Link";
 import { connectDB } from "@/lib/db";
+import { DecodeError } from "next/dist/shared/lib/utils";
 
 export default async function PublicPage({
     params,
 }: {
     params: { username: string };
 }) {
+
+
     await connectDB();
 
     const { username } = await params;
 
-    const user = await User.findOne({ username }).lean();
+
+    const decodedUsername = decodeURIComponent(username);
+
+
+
+    const user = await User.findOne({ username: decodedUsername }).lean();
+
+
+
 
     if (!user) {
         return (
@@ -24,7 +37,7 @@ export default async function PublicPage({
     const links = await Link.find({ userId: user.authUserId }).lean();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#020617] via-black to-[#020617] text-white flex items-center justify-center px-4">
+        <div className="min-h-screen bg-linear-to-br from-[#020617] via-black to-[#020617] text-white flex items-center justify-center px-4">
 
             {/* MAIN CONTAINER */}
             <div className="w-full max-w-md">
@@ -32,7 +45,7 @@ export default async function PublicPage({
                 {/* PROFILE SECTION */}
                 <div className="flex flex-col items-center text-center mb-8">
 
-                    <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 mb-4">
+                    <div className="relative p-0.5 rounded-full bg-linear-to-tr from-blue-500 to-cyan-400 mb-4">
                         <img
                             src={user.image || "/default-avatar.png"}
                             className="w-24 h-24 rounded-full object-cover border-4 border-black"

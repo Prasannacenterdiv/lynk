@@ -48,9 +48,9 @@ export default async function Dashboard() {
         <Navbar />
         <div className="min-h-[calc(100vh-60px)] bg-linear-to-br from-blue-950 via-blue-900 to-black text-white px-6 py-6">
             <div className="max-w-7xl mx-auto flex gap-6 h-full flex-col items-center">
-                <div className="w-[45%] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-lg">
+                <div className="min-w-[70%] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-lg">
                     <div className="h-full flex flex-col">
-                        <h2 className="text-lg font-semibold mb-4 text-white/80">Profile</h2>
+                        <h2 className="text-4xl font-semibold mb-4 text-white/80 text-center">Profile</h2>
                         <div className="flex-1 flex items-center justify-center">
                             <ProfileCard userData={userData} />
                         </div>
