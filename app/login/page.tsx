@@ -12,10 +12,10 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const handleGoogleLogin = () => {
-        // TODO: trigger Google OAuth
         console.log("Google login clicked");
         authClient.signIn.social({
-            provider: 'google'
+            provider: 'google',
+            callbackURL: '/dashboard'
         })
     };
 
@@ -24,27 +24,27 @@ export default function Login() {
     const handleGithubLogin = async () => {
         console.log("GitHub login clicked");
         authClient.signIn.social({
-            provider: 'github'
+            provider: 'github',
+            callbackURL: '/dashboard'
         })
 
-        // TODO: trigger GitHub OAuth
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-neutral-950 text-white px-4">
             <div className="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl p-8 shadow-xl">
 
-                {/* Heading */}
-                <h1 className="text-2xl font-semibold text-center mb-6">
-                    Welcome to <span className="text-blue-600 italic font-thin ml-1">Lynk</span>
+                <h1 className="text-2xl font-semibold text-center mb-6 flex justify-center items-center gap-2">
+                    Welcome to       <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M3 8h10M8 3l5 5-5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <span className="text-lg font-semibold tracking-tight">Lynk</span>
+                    </div>
                 </h1>
-                <div className="flex items-center gap-3 my-6">
-                    <div className="flex-1 h-px bg-neutral-700" />
-                    <span className="text-sm text-neutral-400">OR</span>
-                    <div className="flex-1 h-px bg-neutral-700" />
-                </div>
 
-                {/* OAuth Buttons */}
                 <div className="space-y-3">
                     <button
                         onClick={handleGoogleLogin}

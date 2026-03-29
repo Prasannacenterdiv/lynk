@@ -12,11 +12,7 @@ type LinkType = {
 const SubmitLink = () => {
     const [links, setLinks] = useState<LinkType[]>([]);
     const [loading, setLoading] = useState(true);
-
-    // Modal state
     const [open, setOpen] = useState(false);
-
-    // Form state
     const [title, setTitle] = useState("");
     const [url, setUrl] = useState("");
 
@@ -30,13 +26,10 @@ const SubmitLink = () => {
         getAllLinks();
     }, []);
 
-    // ✅ Add Link
     const handleSubmitLink = async () => {
         try {
             const res = await axios.post("/api/links", { title, url });
-
             setLinks((prev) => [...prev, res.data.data]);
-
             setTitle("");
             setUrl("");
             setOpen(false);
@@ -45,91 +38,54 @@ const SubmitLink = () => {
         }
     };
 
-    // ✅ Delete Link
     const handleDelete = async (id: string) => {
         const confirmDelete = confirm("Are you sure you want to delete this link?");
         if (!confirmDelete) return;
 
         try {
             await axios.delete(`/api/links/${id}`);
-
-            // update UI instantly
             setLinks((prev) => prev.filter((link) => link._id !== id));
         } catch (err) {
             console.error(err);
         }
     };
 
-    if (loading) return <div className="text-white">Loading...</div>;
+    if (loading)
+        return (
+            <div className="flex items-center justify-center h-full text-white/60 text-sm">
+                Loading your links...
+            </div>
+        );
 
     return (
-        <>
-            {/* Add Button */}
-            <button
-                onClick={() => setOpen(true)}
-                className="mb-6 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-                Add a Link 🔗
-            </button>
+        <div className="h-full flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-white/80">All Links</h2>
+                <button
+                    onClick={() => setOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-lg shadow-md shadow-blue-900/30"
+                >
+                    + Add Link
+                </button>
+            </div>
 
-            {/* Modal */}
-            {open && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
-                    <div className="bg-linear-to-br from-blue-900 to-black p-6 rounded-2xl w-full max-w-md border border-blue-800 shadow-xl">
-                        <h2 className="text-xl font-semibold text-white mb-4">
-                            Add New Link
-                        </h2>
-
-                        {/* Title */}
-                        <input
-                            type="text"
-                            placeholder="Enter title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full mb-3 p-2 rounded-lg bg-black/50 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-                        />
-
-                        {/* URL */}
-                        <input
-                            type="text"
-                            placeholder="Enter URL"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            className="w-full mb-4 p-2 rounded-lg bg-black/50 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-                        />
-
-                        {/* Actions */}
-                        <div className="flex justify-end gap-3">
-                            <button
-                                onClick={() => setOpen(false)}
-                                className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600"
-                            >
-                                Cancel
-                            </button>
-
-                            <button
-                                onClick={handleSubmitLink}
-                                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white"
-                            >
-                                Submit
-                            </button>
-                        </div>
-                    </div>
+            {links.length === 0 && (
+                <div className="flex-1 flex items-center justify-center text-white/50 text-sm border border-white/10 rounded-xl bg-black/20">
+                    No links added yet
                 </div>
             )}
 
-            {/* Links Grid */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {links.map((link) => (
                     <div
                         key={link._id}
-                        className="group bg-linear-to-br from-blue-900/60 to-black border border-blue-800/40 rounded-2xl p-5 shadow-lg hover:shadow-blue-900/40 transition-all duration-300 hover:-translate-y-1"
+                        className="group bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-900/30 transition"
                     >
-                        <h2 className="text-lg font-semibold text-white mb-2 truncate">
+                        <h2 className="text-base font-semibold text-white mb-1 truncate">
                             {link.title}
                         </h2>
 
-                        <p className="text-sm text-gray-400 truncate mb-4">
+                        <p className="text-xs text-white/50 truncate mb-4">
                             {link.url}
                         </p>
 
@@ -137,24 +93,68 @@ const SubmitLink = () => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium py-2 rounded-lg transition-all duration-200"
+                            className="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium py-2 rounded-lg"
                         >
-                            Open Link →
+                            Open Link
                         </a>
 
-                        {/* Actions */}
-                        <div className="flex justify-between items-center mt-3">
+                        <div className="flex justify-end mt-4">
                             <button
                                 onClick={() => handleDelete(link._id)}
-                                className="text-xs text-red-400 hover:text-red-300"
+                                className="flex items-center gap-1 text-sm font-medium
+                                cursor-pointer px-3 py-1.5 rounded-md border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 transition "
                             >
-                                🗑 Delete
+                                <span>Delete</span>
                             </button>
                         </div>
                     </div>
                 ))}
             </div>
-        </>
+
+            {open && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+                    <div className="w-full max-w-md bg-linear-to-br from-blue-950 to-black border border-white/10 rounded-2xl p-6 shadow-2xl">
+                        <h2 className="text-xl font-semibold text-white mb-5">
+                            Add New Link
+                        </h2>
+
+                        <div className="space-y-3">
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-blue-500"
+                            />
+
+                            <input
+                                type="text"
+                                placeholder="https://example.com"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-3 mt-6">
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/20 text-white"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={handleSubmitLink}
+                                className="px-4 py-2 text-sm rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-900/30"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 

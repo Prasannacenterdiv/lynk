@@ -1,147 +1,156 @@
-"use client"
-import axios from 'axios';
-import Image from 'next/image'
-import { useState } from 'react';
+"use client";
+
+import axios from "axios";
+import Image from "next/image";
+import { useState } from "react";
 
 const ProfileCard = ({ userData }) => {
     const [data, setData] = useState(userData);
     const [isOpen, setIsOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [formData, setFormData] = useState({
         username: userData?.username || "",
-        bio: userData?.bio || ""
+        bio: userData?.bio || "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
-        // update UI (later replace with API call)
+        try {
+            setData({ ...data, ...formData });
 
+            await axios.put("/api/user/profileUpdate", formData);
 
-        setData({ ...data, ...formData });
-
-
-        const response = await axios.put('/api/user/profileUpdate', formData);
-        console.log(response);
-
-        setIsOpen(false);
+            setIsOpen(false);
+        } catch (error) {
+            console.error(error);
+            alert("Update failed");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleCopy = async () => {
-        const url: string = process.env.NEXT_PUBLIC_APP_URL!;
-        console.log(url);
-
+        const url = process.env.NEXT_PUBLIC_APP_URL || "";
         await navigator.clipboard.writeText(url + data.username);
-        alert("Copied to the Clipboard!");
-    }
+        alert("Copied!");
+    };
 
     return (
         <>
             {/* CARD */}
-            <div className="max-w-md mx-auto mt-10">
-                <div className="bg-linear-to-br from-blue-900 to-black text-white rounded-2xl shadow-xl p-6">
+            <div className="w-full">
+                <div className="bg-gradient-to-b from-slate-900 to-black border border-slate-800 rounded-2xl p-6 shadow-xl">
 
-                    <h2 className="text-xl font-semibold mb-4">Your Profile</h2>
-
-                    <div className="flex items-center gap-4 mb-5">
-                        <Image
-                            src={data?.image}
-                            alt='pfp'
-                            width={60}
-                            height={60}
-                            className="rounded-full border-2 border-blue-400"
-                        />
-                        <h3 className="text-lg font-medium">{data?.username}</h3>
-                    </div>
-
-                    <div className="h-px bg-gray-700 mb-4" />
-
-                    <div>
-                        <h3 className="text-md font-semibold mb-2 text-blue-400">
-                            Your Bio
-                        </h3>
-                        <p className="text-sm text-gray-300">{data?.bio}</p>
-                    </div>
-
-                    <button
-                        onClick={() => setIsOpen(true)}
-                        className="mt-5 w-full bg-blue-600 hover:bg-blue-500 rounded-lg py-2 text-sm font-medium"
-                    >
-                        Edit Profile
-                    </button>
-                    <div className='flex flex-col items-center gap-2'>
-                        <h2 className='text-center mt-5 font-medium text-xl'>This is your public URL! 🎉</h2>
-                        <div
-                            onClick={() => { handleCopy() }}
-                            className='border px-4 py-2 rounded-4xl cursor-pointer bg-blue-700 border-black'
-                        >COPY Link</div>
-                    </div>
-
-                </div>
-            </div>
-
-            {/* MODAL WITH FORM */}
-            {isOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-                    <form
-                        onSubmit={handleSubmit}
-                        className="bg-gray-900 text-white p-6 rounded-2xl w-[90%] max-w-md shadow-lg"
-                    >
-                        <h2 className="text-lg font-semibold mb-4">Edit Profile</h2>
-
-                        {/* Username */}
-                        <div className="mb-4">
-                            <label className="text-sm text-gray-300">Username</label>
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-blue-500"
+                    {/* Profile */}
+                    <div className="flex flex-col items-center text-center">
+                        <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 mb-4">
+                            <Image
+                                src={data?.image || "/default-avatar.png"}
+                                alt="pfp"
+                                width={80}
+                                height={80}
+                                className="rounded-full border-4 border-black object-cover"
                             />
                         </div>
 
-                        {/* Bio */}
-                        <div className="mb-4">
-                            <label className="text-sm text-gray-300">Bio</label>
+                        <h2 className="text-xl font-semibold">{data?.username}</h2>
+                        <p className="text-xs text-blue-400 mt-1">Public Profile</p>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="my-5 h-px bg-slate-800" />
+
+                    {/* Bio */}
+                    <div>
+                        <p className="text-xs text-slate-500 mb-1 uppercase tracking-wider">
+                            Bio
+                        </p>
+                        <p className="text-sm text-slate-300">
+                            {data?.bio || "No bio added yet."}
+                        </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-6 space-y-3">
+                        <button
+                            onClick={() => setIsOpen(true)}
+                            className="w-full bg-white text-black hover:bg-slate-200 font-medium py-2.5 rounded-lg text-sm"
+                        >
+                            Edit Profile
+                        </button>
+
+                        <button
+                            onClick={handleCopy}
+                            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg text-sm"
+                        >
+                            Copy Public Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* MODAL */}
+            {isOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur z-50 p-4">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-md"
+                    >
+                        <h2 className="text-lg font-semibold mb-4">Edit Profile</h2>
+
+                        <div className="space-y-4">
+                            <input
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                disabled={isSubmitting}
+                                placeholder="Username"
+                                className="w-full p-3 bg-black border border-slate-700 rounded-lg text-sm"
+                            />
+
                             <textarea
                                 name="bio"
                                 value={formData.bio}
                                 onChange={handleChange}
+                                disabled={isSubmitting}
+                                placeholder="Bio"
                                 rows={3}
-                                className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-blue-500"
+                                className="w-full p-3 bg-black border border-slate-700 rounded-lg text-sm"
                             />
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex justify-end gap-3">
+                        <div className="flex gap-3 mt-6">
                             <button
-                                type="button"
-                                onClick={() => setIsOpen(false)}
-                                className="px-4 py-2 text-sm bg-gray-700 rounded-lg hover:bg-gray-600"
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="flex-1 bg-blue-600 hover:bg-blue-500 py-2 rounded-lg text-sm"
                             >
-                                Cancel
+                                {isSubmitting ? "Saving..." : "Save"}
                             </button>
 
                             <button
-                                type="submit"
-                                className="px-4 py-2 text-sm bg-blue-600 rounded-lg hover:bg-blue-500"
+                                type="button"
+                                onClick={() => setIsOpen(false)}
+                                className="flex-1 bg-slate-800 py-2 rounded-lg text-sm"
                             >
-                                Save
+                                Cancel
                             </button>
                         </div>
                     </form>
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default ProfileCard
+export default ProfileCard;
