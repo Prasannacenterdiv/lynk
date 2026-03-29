@@ -72,10 +72,6 @@ export default async function Dashboard() {
                             <span className="mt-0.5">⚠️</span>
                             <p>Links must start with <span className="font-semibold">http://</span> or <span className="font-semibold">https://</span></p>
                         </div>
-                        <div className="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-sm px-3 py-2 rounded-lg">
-                            <span className="mt-0.5">⚠️</span>
-                            <p>If your public link is not working, try updating your profile name</p>
-                        </div>
                     </div>
 
                     <div className="flex-1 overflow-hidden rounded-xl border border-white/10 bg-black/30 p-4">
